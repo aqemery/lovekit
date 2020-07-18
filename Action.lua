@@ -29,6 +29,21 @@ function Action.rotateBy(degrees,t)
     return behav
 end
 
+function Action.scaleBy(scaleBy, t)
+	local behav = function (node, dt)
+		local delta = scaleBy /(t*1.0)
+		local current = 0
+		while current < t do
+			current = current + dt
+			posX = node.position.x
+			posY = node.position.y
+			node.scale = node.scale + delta * dt
+			node,dt = coroutine.yield()
+		end
+    end
+    return behav
+end
+
 function Action.wait(t)
 	local behav = function (node, dt)
 		local current = 0

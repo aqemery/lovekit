@@ -6,8 +6,8 @@ function Node.new()
     position = {x=0, y=0},
 	zPosition = 0.0,
 	rotation = 0,
-	xScale = 1,
-	yScale = 2,
+	scale = 1.5,
+	radius = 10,
 	alpha = 1,
 	isHidden = false,
 	children = {},
@@ -21,6 +21,10 @@ function Node:run(action)
 	table.insert(self.actions, coroutine.create(action))
 end
 
+function Node:clearActions(action)
+	self.actions = {}
+end
+
 function Node:runGroup(group)
 	for a,v in ipairs(group) do
 		table.insert(self.actions, coroutine.create(v))
@@ -32,35 +36,28 @@ function Node:update(dt)
 		status = coroutine.resume(v,self,dt)
 		-- if status then break end
 	end
+
+	for a,v in ipairs(self.children) do
+		v:update(dt)
+	end
 end
 
 
 function Node:draw()
-	canvas = love.graphics.newCanvas(800, 600)
- 
-    -- Rectangle is drawn to the canvas with the regular alpha blend mode.
-    love.graphics.setCanvas(canvas)
-    	love.graphics.push()
-    	love.graphics.scale(self.xScale, self.yScale)
-        love.graphics.clear()
-		love.graphics.circle("fill", 10, 10, 10)
-		love.graphics.setColor(255, 0, 0)
-		love.graphics.line(10, 10, 10 + 10*math.cos(math.rad(self.rotation)), 10 - 10*math.sin(math.rad(self.rotation)))
-		love.graphics.setColor(255, 255, 255)
-		
-		love.graphics.pop()
-    love.graphics.setCanvas()
-    love.graphics.draw(canvas,self.position.x, self.position.y)
+	local rs = self.radius * self.scale
 
-
-
-	-- love.graphics.push()
-	-- -- love.graphics.scale(self.xScale, self.yScale)
-	-- love.graphics.circle( "fill", self.position.x, self.position.y, 10 )
-	-- love.graphics.setColor(255, 0, 0)
-	-- love.graphics.line(self.position.x, self.position.y, self.position.x + 10*math.cos(math.rad(self.rotation)), self.position.y - 10*math.sin(math.rad(self.rotation)))
-	-- love.graphics.setColor(255, 255, 255)
-	-- love.graphics.pop()
+	love.graphics.translate(self.position.x, self.position.y)
+	love.graphics.push()
+	love.graphics.translate(-rs, -rs)
+	love.graphics.circle("line", rs, rs, rs)
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.line(rs, rs, rs + rs*math.cos(math.rad(self.rotation)), rs - rs*math.sin(math.rad(self.rotation)))
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.pop()
+	love.graphics.translate(-self.position.x, -self.position.y)
+	for a,v in ipairs(self.children) do
+		v:draw(dt)
+	end
 end
 
 return Node
