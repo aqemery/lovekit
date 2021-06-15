@@ -77,7 +77,6 @@ end
 function PlayerNode:update(dt)
 	for a,v in ipairs(self.actions) do
 		status = coroutine.resume(v,self,dt)
-		-- if status then break end
 	end
 
 	for a,v in ipairs(self.children) do
@@ -89,34 +88,21 @@ end
 function PlayerNode:draw()
 		love.graphics.translate(self.position.x, self.position.y)
 		love.graphics.push()
-    	love.graphics.scale(self.xScale, self.yScale)
+    love.graphics.scale(self.xScale, self.yScale)
 		love.graphics.translate(10, 10)
 		love.graphics.rotate(math.rad(self.rotation))
 		love.graphics.translate(-10, -10)
 		love.graphics.polygon("line", 0,0,20,10,0,20,10,10)
-		love.graphics.setColor(255, 0, 0)
 		if self.burn then
 			love.graphics.polygon("line", -5,10,4,6,8,10,4,14)
 		end
-		love.graphics.setColor(255, 255, 255)
 		love.graphics.translate(-self.position.x, -self.position.y)
 		for a,v in ipairs(self.children) do
 			v:draw(dt)
 		end
 		love.graphics.pop()
 		love.graphics.translate(-self.position.x, -self.position.y)
-    -- love.graphics.setCanvas()
-    -- love.graphics.draw(canvas, 0, 0)
 
-
-
-	-- love.graphics.push()
-	-- -- love.graphics.scale(self.xScale, self.yScale)
-	-- love.graphics.circle( "fill", self.position.x, self.position.y, 10 )
-	-- love.graphics.setColor(255, 0, 0)
-	-- love.graphics.line(self.position.x, self.position.y, self.position.x + 10*math.cos(math.rad(self.rotation)), self.position.y - 10*math.sin(math.rad(self.rotation)))
-	-- love.graphics.setColor(255, 255, 255)
-	-- love.graphics.pop()
 	for a,v in ipairs(self.children) do
 		v:draw(dt)
 	end

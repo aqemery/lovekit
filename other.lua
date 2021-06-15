@@ -3,7 +3,6 @@ require('./Action')
 require('./Messager')
 require('./PlayerNode')
 
-
 nodes = {}
 
 
@@ -26,10 +25,6 @@ function love.load()
 	local sequence = Action.sequence({scaleUp, wait, scaleDown, wait})
 	local sequence2 = Action.sequence({moveRight, moveLeft})
 	local sequence3 = Action.sequence({rotateRight, rotateLeft})
-
-
-	
-
 
 	node = Node.new()
 	node.position = { x = 300, y = 130}
@@ -92,13 +87,6 @@ function love.load()
 	-- Messager.send("hello", { x = 0, y = 500})
 end
 
-
-function love.resize(w, h)
-end
-
-function love.keyreleased(key)
-end
-
 function love.keypressed(key, unicode)
 	Messager.send(unicode)
 end
@@ -114,6 +102,6 @@ function love.draw()
 	for i,m in ipairs(nodes) do
 		m:draw() 
 	end
-	love.graphics.circle( "line", 300, 130, 50 )
+	love.graphics.circle("line", 300, 130, 50 )
 end
 
